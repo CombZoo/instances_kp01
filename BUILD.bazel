@@ -1,0 +1,65 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_binary(
+    name = "app_solcheck_KP01",
+    srcs = [
+        "src/solcheck_kp01/mainSolKP01.cpp",
+        "src/solcheck_kp01/solcheck_kp01.cpp",  # must include library impl
+    ],
+    copts = [
+        "-std=c++17",
+        "-fconcepts",
+        "-Wfatal-errors",
+    ],
+    deps = [
+        "solcheck_kp01_lib",
+        "@OptFrame//src:OptFCore",
+    ],
+)
+
+# this is a shared library
+cc_binary(
+    name = "solcheck_kp01",
+    copts = [
+        "-std=c++17",
+        "-fconcepts",
+        "-Wfatal-errors",
+    ],
+    linkshared = 1,
+    deps = ["solcheck_kp01_lib"],  # just include lib files here
+)
+
+# this library is not a binary! see version with linkshared=1
+cc_library(
+    name = "solcheck_kp01_lib",
+    hdrs = [
+        "src/solcheck_kp01/solcheck_kp01.cpp",
+        "src/solcheck_kp01/solcheck_kp01.h",
+    ],
+    strip_include_prefix = "src/",
+    deps = [
+        "solcheck_kp01_hpp"
+    ],
+)
+
+# these are all important included files
+cc_library(
+    name = "solcheck_kp01_hpp",
+    hdrs = glob([
+        "src/solcheck_kp01/**/*.hpp",
+    ]),
+    strip_include_prefix = "src/",
+    deps = [
+        "nlohmann",
+        "@OptFrame//src:OptFrame" # only because of Scanner...
+    ],
+)
+
+# thirdparty json library
+cc_library(
+    name = "nlohmann",
+    hdrs = glob([
+        "libs/nlohmann/**/*.hpp",
+    ]),
+    strip_include_prefix = "libs/",
+)

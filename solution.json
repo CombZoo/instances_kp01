@@ -1,0 +1,8 @@
+{
+    "standard" : 0,
+    "description": "default kp01 launch configuration",
+    "problem_file": "instances/knapsack.txt",
+    "solution_format" : "json",
+    "solution_value" : 7,
+    "solution_data" : [1,1,0,1,0]
+}
